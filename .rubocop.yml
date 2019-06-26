@@ -1,0 +1,64 @@
+AllCops:
+  Exclude:
+    - 'db/**/*'
+
+Layout/AlignHash:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+  EnforcedLastArgumentHashStyle: ignore_implicit
+
+Layout/IndentFirstHashElement:
+  EnforcedStyle: consistent
+
+Metrics/ClassLength:
+  Max: 300
+
+Metrics/AbcSize:
+  Max: 35
+  Exclude:
+    - 'app/lib/parsers/tcm_parser.rb'
+
+Metrics/MethodLength:
+  Max: 50
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/GuardClause:
+  MinBodyLength: 4
+
+Style/NumericLiterals:
+  Enabled: false
+
+Style/SymbolArray:
+  MinSize: 4
+
+Metrics/LineLength:
+  Max: 175
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+    - 'db/**'
+
+Style/StringLiterals:
+  Exclude:
+    - 'db/schema.rb'
+
+Style/MixinUsage:
+  Exclude:
+    - 'bin/**'
+
+Naming/HeredocDelimiterNaming:
+  Exclude:
+    - 'app/lib/builders/**/'
+
+# using '->' everywhere is cleaner and more consistent
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/IfUnlessModifier:
+  Enabled: false

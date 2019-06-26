@@ -1,0 +1,3 @@
+task :console do
+  exec "pry -r plonquo_requester -I ./lib"
+end
