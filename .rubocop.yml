@@ -15,8 +15,6 @@ Metrics/ClassLength:
 
 Metrics/AbcSize:
   Max: 35
-  Exclude:
-    - 'app/lib/parsers/tcm_parser.rb'
 
 Metrics/MethodLength:
   Max: 50
@@ -38,6 +36,8 @@ Style/SymbolArray:
 
 Metrics/LineLength:
   Max: 175
+  Exclude:
+    - 'spec/plonquo_faraday_wrapper_spec.rb'
 
 Metrics/BlockLength:
   Exclude:

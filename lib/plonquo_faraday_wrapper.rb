@@ -8,8 +8,6 @@ class PlonquoFaradayWrapper
   attr_accessor :user
 
   def initialize(url)
-    raise ArgumentError, 'Please enter url without a trailing /' if url.end_with?('/')
-
     @conn = Faraday.new(url: url)
   end
 
@@ -17,10 +15,11 @@ class PlonquoFaradayWrapper
     return authenticate_by_token(options[:token]) if options.key?(:token)
     return authenticate_by_credentials(options[:username], options[:password]) if options.key?(:username) && options.key?(:password)
 
-    raise ArgumentError, 'No access token or  (complete)  login credentials found in options hash'
+    raise ArgumentError, 'No access token or (complete) login credentials found in options hash'
   end
 
   def get(path, options = {})
+    check_auth
     response = conn.get do |req|
       req.url path
       req.headers['Content-Type'] = options[:content_type] || 'application/json'
@@ -30,13 +29,12 @@ class PlonquoFaradayWrapper
       end
     end
     check_auth(response)
-    attributes = JSON.parse(response.body)['data']
+    attributes = JSON.parse(response.body)
     create_hash(attributes)
   end
 
   def post(path, options = {})
-    raise StandardError, 'Not authenticated, use the authenticate method to login by token or credentials' if @token.nil? || @token.empty?
-
+    check_auth
     response = conn.post do |req|
       req.url path
       req.headers['Content-Type'] = options[:content_type] || 'application/json'
@@ -50,18 +48,57 @@ class PlonquoFaradayWrapper
       end
     end
     check_auth(response)
-    attributes = JSON.parse(response.body)['data']
+    attributes = JSON.parse(response.body)
+    create_hash(attributes)
+  end
+
+  def request(method, options = {})
+    check_options(method, options)
+    request_conn = Faraday.new(url: options[:url])
+
+    if method == 'post'
+      response = request_conn.post do |req|
+        req.url options[:path]
+        options[:headers]&.each do |param, value|
+          req.headers[param] = value
+        end
+
+        req.body = options[:body]
+        options[:params]&.each do |param, value|
+          req.params[param] = value
+        end
+      end
+    end
+
+    if method == 'get'
+      response = request_conn.get do |req|
+        req.url options[:path]
+        options[:headers]&.each do |param, value|
+          req.headers[param] = value
+        end
+        req.body = options[:body]
+        options[:params]&.each do |param, value|
+          req.params[param] = value
+        end
+      end
+    end
+    attributes = JSON.parse(response.body)
     create_hash(attributes)
   end
 
   private
 
-  def check_auth(response = nil)
-    raise StandardError, 'Not authenticated, use the authenticate method to login by token or credentials' if @token.nil? || @token.empty?
+  def check_options(method, options)
+    raise ArgumentError, 'Please define post or get in the method call' unless method == 'post' || method == 'get'
+    raise ArgumentError, 'Please define a url in the options hash to call' if options[:url].nil? || options[:url].empty?
+    raise ArgumentError, 'Please define a path in the options hash to call' if options[:path].nil? || options[:path].empty?
+  end
 
-    unless response
+  def check_auth(response = nil)
+    unless response.nil?
       raise StandardError, 'Unauthorized are you sure  your token or credentials are still valid?' if response.status == 401
     end
+    raise StandardError, 'Not authenticated, use the authenticate method to login by token or credentials' if @token.nil? || @token.empty?
   end
 
   def authenticate_by_token(token)
@@ -72,7 +109,6 @@ class PlonquoFaradayWrapper
       req.headers['Content-Type'] = 'application/json'
       req.headers['Authorization'] = token
     end
-
     if response.status == 200
       attributes = JSON.parse(response.body)['data']['attributes']
       @user = create_hash(attributes)

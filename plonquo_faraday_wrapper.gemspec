@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Gem::Specification.new do |s|
-  s.name        = 'plonquo_faraday_requester'
+  s.name        = 'plonquo_faraday_wrapper'
   s.version     = '0.0.0'
   s.date        = '2019-07-19'
   s.summary     = 'PlonquoFaradayWrapper'
@@ -15,4 +15,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'faraday', '~> 0.9.2'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rake'
+  s.add_development_dependency 'rspec', '~> 3.7'
 end
