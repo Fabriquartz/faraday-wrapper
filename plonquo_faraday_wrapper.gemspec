@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    =
     'https://rubygems.org/gems/plonquo-request'
   s.license = 'MIT'
-  s.add_runtime_dependency 'faraday', '~> 0.9.2'
+  s.add_runtime_dependency 'faraday', '< 0.16'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec', '~> 3.7'
