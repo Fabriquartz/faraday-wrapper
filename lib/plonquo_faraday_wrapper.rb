@@ -24,6 +24,7 @@ class PlonquoFaradayWrapper
     check_auth
     response = conn.get do |req|
       req.url path
+      req.options.timeout = options[:timeout] || 30
       req.headers['Content-Type'] = options[:content_type] || 'application/json'
       req.headers['Authorization'] = @token
       options[:params]&.each do |param, value|
@@ -39,6 +40,7 @@ class PlonquoFaradayWrapper
     check_auth
     response = conn.post do |req|
       req.url path
+      req.options.timeout = options[:timeout] || 30
       req.headers['Content-Type'] = options[:content_type] || 'application/json'
       req.headers['Authorization'] = @token
       options[:headers]&.each do |param, value|
@@ -61,6 +63,7 @@ class PlonquoFaradayWrapper
     if method == 'post'
       response = request_conn.post do |req|
         req.url options[:path]
+        req.options.timeout = options[:timeout] || 30
         options[:headers]&.each do |param, value|
           req.headers[param] = value
         end
@@ -75,6 +78,7 @@ class PlonquoFaradayWrapper
     if method == 'get'
       response = request_conn.get do |req|
         req.url options[:path]
+        req.options.timeout = options[:timeout] || 30
         options[:headers]&.each do |param, value|
           req.headers[param] = value
         end
