@@ -6,9 +6,11 @@ class PlonquoFaradayWrapper
   attr_accessor :conn
   attr_accessor :token
   attr_accessor :user
+  attr_accessor :no_auth_required
 
-  def initialize(url)
+  def initialize(url, options = {})
     @conn = Faraday.new(url: url)
+    @no_auth_required = options[:no_auth_required] || false
   end
 
   def authenticate(options = {})
@@ -96,8 +98,9 @@ class PlonquoFaradayWrapper
 
   def check_auth(response = nil)
     unless response.nil?
-      raise StandardError, 'Unauthorized are you sure  your token or credentials are still valid?' if response.status == 401
+      raise StandardError, 'Unauthorized, are you sure  your token or credentials are still valid?' if response.status == 401
     end
+    return if @no_auth_required
     raise StandardError, 'Not authenticated, use the authenticate method to login by token or credentials' if @token.nil? || @token.empty?
   end
 
