@@ -9,7 +9,7 @@ class PlonquoFaradayWrapper
   attr_accessor :no_auth_required
 
   def initialize(url, options = {})
-    @conn = Faraday.new(url: url, ssl: { verify: false }) #TODO add options for ssl config
+    @conn = Faraday.new(url: url)
     @no_auth_required = options[:no_auth_required] || false
   end
 
@@ -58,10 +58,9 @@ class PlonquoFaradayWrapper
 
   def request(method, options = {})
     check_options(method, options)
-    request_conn = Faraday.new(url: options[:url])
 
     if method == 'post'
-      response = request_conn.post do |req|
+      response = conn.post do |req|
         req.url options[:path]
         req.options.timeout = options[:timeout] || 30
         options[:headers]&.each do |param, value|
@@ -76,7 +75,7 @@ class PlonquoFaradayWrapper
     end
 
     if method == 'get'
-      response = request_conn.get do |req|
+      response = conn.get do |req|
         req.url options[:path]
         req.options.timeout = options[:timeout] || 30
         options[:headers]&.each do |param, value|
@@ -88,15 +87,13 @@ class PlonquoFaradayWrapper
         end
       end
     end
-    attributes = JSON.parse(response.body)
-    create_hash(attributes)
+    response.body
   end
 
   private
 
   def check_options(method, options)
     raise ArgumentError, 'Please define post or get in the method call' unless method == 'post' || method == 'get'
-    raise ArgumentError, 'Please define a url in the options hash to call' if options[:url].nil? || options[:url].empty?
     raise ArgumentError, 'Please define a path in the options hash to call' if options[:path].nil? || options[:path].empty?
   end
 
