@@ -9,7 +9,7 @@ class PlonquoFaradayWrapper
   attr_accessor :no_auth_required
 
   def initialize(url, options = {})
-    @conn = Faraday.new(url: url)
+    @conn = Faraday.new(url: url, ssl: { verify: false }) #TODO add options for ssl config
     @no_auth_required = options[:no_auth_required] || false
   end
 
