@@ -30,6 +30,9 @@ class PlonquoFaradayWrapper
       options[:params]&.each do |param, value|
         req.params[param] = value
       end
+      options[:headers]&.each do |param, value|
+        req.headers[param] = value
+      end
     end
     check_auth(response)
     attributes = JSON.parse(response.body)
