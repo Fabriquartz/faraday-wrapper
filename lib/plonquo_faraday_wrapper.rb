@@ -87,7 +87,7 @@ class PlonquoFaradayWrapper
         end
       end
     end
-    response.body
+    response
   end
 
   private
