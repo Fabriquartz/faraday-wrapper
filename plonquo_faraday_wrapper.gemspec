@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'plonquo_faraday_wrapper'
-  s.version     = '1.1.4'
+  s.version     = '1.2.4'
   s.date        = '2019-07-19'
   s.summary     = 'PlonquoFaradayWrapper'
   s.description = 'PlonquoFaradayWrapper is a wrapper around the faraday gem for Fabriquartz Micro-Services'

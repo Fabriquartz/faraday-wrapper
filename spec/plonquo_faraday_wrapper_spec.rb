@@ -37,12 +37,6 @@ describe PlonquoFaradayWrapper do
     expect { wrapper.request(options) }.to raise_error(ArgumentError, 'Please define post or get in the method call')
   end
 
-  it 'raises a error when the request method is called without a url in the options hash' do
-    wrapper = PlonquoFaradayWrapper.new('https://json-api-staging.rail.io/')
-    options = { path: '/users/current', headers: { 'Content-Type': 'application/json', Authorization: 'Basic Y2VkcmljLnJlbW9uZEBmYWJyaXF1YXJ0ei5jb206V2FhbG5vcmQxMDIx' } }
-    expect { wrapper.request('get', options) }.to raise_error(ArgumentError, 'Please define a url in the options hash to call')
-  end
-
   it 'raises a error when the request method is called without a path in the options hash' do
     wrapper = PlonquoFaradayWrapper.new('https://json-api-staging.rail.io/')
     options = { url: 'http://localhost:3000/', headers: { 'Content-Type': 'application/json', Authorization: 'Basic Y2VkcmljLnJlbW9uZEBmYWJyaXF1YXJ0ei5jb206V2FhbG5vcmQxMDIx' } }

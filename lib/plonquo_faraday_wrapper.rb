@@ -8,6 +8,34 @@ class PlonquoFaradayWrapper
   attr_accessor :user
   attr_accessor :no_auth_required
 
+  METHODS = %i[post get patch delete].freeze
+
+  METHODS.each do |method|
+    define_method(method) do |*args|
+      check_auth
+      response = conn.send(method) do |req|
+        path = args[0]
+        options = args[1] || {}
+        req.url path
+        req.options.timeout = options[:timeout] || 30
+        req.headers['Content-Type'] = options[:content_type] || 'application/json'
+        req.headers['Authorization'] = @token
+        options[:headers]&.each do |param, value|
+          req.headers[param] = value
+        end
+        req.body = options[:body]
+        options[:params]&.each do |param, value|
+          req.params[param] = value
+        end
+      end
+      check_auth(response)
+      return response.status if response.body.empty?
+      attributes = JSON.parse(response.body)
+
+      create_hash(attributes)
+    end
+  end
+
   def initialize(url, options = {})
     @conn = Faraday.new(url: url)
     @no_auth_required = options[:no_auth_required] || false
@@ -20,77 +48,20 @@ class PlonquoFaradayWrapper
     raise ArgumentError, 'No access token or (complete) login credentials found in options hash'
   end
 
-  def get(path, options = {})
-    check_auth
-    response = conn.get do |req|
-      req.url path
+  def request(method, options = {})
+    check_options(method, options)
+    conn.send(method) do |req|
+      req.url options[:path]
       req.options.timeout = options[:timeout] || 30
-      req.headers['Content-Type'] = options[:content_type] || 'application/json'
-      req.headers['Authorization'] = @token
-      options[:params]&.each do |param, value|
-        req.params[param] = value
-      end
       options[:headers]&.each do |param, value|
         req.headers[param] = value
       end
-    end
-    check_auth(response)
-    attributes = JSON.parse(response.body)
-    create_hash(attributes)
-  end
 
-  def post(path, options = {})
-    check_auth
-    response = conn.post do |req|
-      req.url path
-      req.options.timeout = options[:timeout] || 30
-      req.headers['Content-Type'] = options[:content_type] || 'application/json'
-      req.headers['Authorization'] = @token
-      options[:headers]&.each do |param, value|
-        req.headers[param] = value
-      end
       req.body = options[:body]
       options[:params]&.each do |param, value|
         req.params[param] = value
       end
     end
-    check_auth(response)
-    attributes = JSON.parse(response.body)
-    create_hash(attributes)
-  end
-
-  def request(method, options = {})
-    check_options(method, options)
-
-    if method == 'post'
-      response = conn.post do |req|
-        req.url options[:path]
-        req.options.timeout = options[:timeout] || 30
-        options[:headers]&.each do |param, value|
-          req.headers[param] = value
-        end
-
-        req.body = options[:body]
-        options[:params]&.each do |param, value|
-          req.params[param] = value
-        end
-      end
-    end
-
-    if method == 'get'
-      response = conn.get do |req|
-        req.url options[:path]
-        req.options.timeout = options[:timeout] || 30
-        options[:headers]&.each do |param, value|
-          req.headers[param] = value
-        end
-        req.body = options[:body]
-        options[:params]&.each do |param, value|
-          req.params[param] = value
-        end
-      end
-    end
-    response
   end
 
   private
