@@ -8,7 +8,7 @@ class PlonquoFaradayWrapper
   attr_accessor :user
   attr_accessor :no_auth_required
 
-  METHODS = %i[post get patch delete].freeze
+  METHODS = %i[post get put patch delete].freeze
 
   METHODS.each do |method|
     define_method(method) do |*args|
