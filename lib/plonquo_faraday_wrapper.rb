@@ -30,9 +30,13 @@ class PlonquoFaradayWrapper
       end
       check_auth(response)
       return response.status if response.body.empty?
-      attributes = JSON.parse(response.body)
 
-      create_hash(attributes)
+      begin
+        attributes = JSON.parse(response.body)
+        create_hash(attributes)
+      rescue JSON::ParserError
+        { error: 'Could not parse response to json', response_body: response.body }
+      end
     end
   end
 
