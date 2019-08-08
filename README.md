@@ -74,9 +74,8 @@ The request method wil incontrary to the post and get method return the full res
                         url:          'https://bci.prorail.nl',
                         path:         "/LIMessageProcessing/http/UICCCMessageProcessing",
                         body:         message,
-                        content_type: 'application/xml',
                         timeout:      10,
-                        headers:      { example_header: example_value },
+                        headers:      { "Content-Type": 'application/xml', },
                         params:       { example_param: example_value }
                       }
 response = wrapper.request('post', options)
