@@ -1,15 +1,16 @@
 require './lib/plonquo_faraday_wrapper.rb'
 describe PlonquoFaradayWrapper do
   describe '#ssl_verification' do
-    let!(:wrapper)  { PlonquoFaradayWrapper.new('https://staging.calipri.plonquo.io', **options) }
-    let(:mock_faraday) { instance_double(Faraday) }
+    let!(:wrapper)  { PlonquoFaradayWrapper.new('https://staging.calipri.plonquo.io', options) }
 
+    let!(:random) { options[:ssl_verification] }
+    let(:ssl_verify) { wrapper.conn.ssl.verify }
 
     context 'when the given option is false' do
       let(:options) { { ssl_verification: false } }
 
       it 'hands over the setting to Faraday' do
-        expect(Faraday.ssl.verify).to eq false
+        expect(ssl_verify).to eq false
       end
     end
 
@@ -17,7 +18,7 @@ describe PlonquoFaradayWrapper do
       let(:options) { { ssl_verification: true } }
 
       it 'hands over the setting to Faraday' do
-        expect(Faraday.ssl.verify).to eq true
+        expect(ssl_verify).to eq true
       end
     end
 
@@ -25,7 +26,7 @@ describe PlonquoFaradayWrapper do
       let(:options) { { foo_option: true } }
 
       it 'hands over the default setting to Faraday' do
-        expect(Faraday.ssl.verify).to eq true
+        expect(ssl_verify).to eq true
       end
     end
   end
