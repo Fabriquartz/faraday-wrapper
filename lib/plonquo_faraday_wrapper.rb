@@ -4,7 +4,6 @@ class PlonquoFaradayWrapper
   require 'faraday'
   require 'json'
   attr_accessor :conn
-  attr_accessor :ssl_verification
   attr_accessor :token
   attr_accessor :user
   attr_accessor :no_auth_required
