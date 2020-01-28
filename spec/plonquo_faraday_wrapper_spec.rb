@@ -1,5 +1,36 @@
 require './lib/plonquo_faraday_wrapper.rb'
 describe PlonquoFaradayWrapper do
+  describe '#ssl_verification' do
+    let!(:wrapper)  { PlonquoFaradayWrapper.new('https://staging.calipri.plonquo.io', options) }
+
+    let!(:random) { options[:ssl_verification] }
+    let(:ssl_verify) { wrapper.conn.ssl.verify }
+
+    context 'when the given option is false' do
+      let(:options) { { ssl_verification: false } }
+
+      it 'hands over the setting to Faraday' do
+        expect(ssl_verify).to eq false
+      end
+    end
+
+    context 'when the given option is true' do
+      let(:options) { { ssl_verification: true } }
+
+      it 'hands over the setting to Faraday' do
+        expect(ssl_verify).to eq true
+      end
+    end
+
+    context 'when no option has been specified' do
+      let(:options) { { foo_option: true } }
+
+      it 'hands over the default setting to Faraday' do
+        expect(ssl_verify).to eq true
+      end
+    end
+  end
+
   it 'initailizes a faraday instance with the correct url' do
     wrapper = PlonquoFaradayWrapper.new('https://json-api-staging.rail.io/')
     expect(wrapper.conn.url_prefix.to_s).to eq 'https://json-api-staging.rail.io/'

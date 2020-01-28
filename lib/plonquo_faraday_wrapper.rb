@@ -42,6 +42,7 @@ class PlonquoFaradayWrapper
 
   def initialize(url, options = {})
     @conn = Faraday.new(url: url)
+    conn.ssl.verify = options[:ssl_verification] != false
     @no_auth_required = options[:no_auth_required] || false
   end
 
