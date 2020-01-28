@@ -42,7 +42,7 @@ class PlonquoFaradayWrapper
 
   def initialize(url, options = {})
     @conn = Faraday.new(url: url)
-    conn.ssl.verify = boolean_specified?(options[:ssl_verification]) ? options[:ssl_verification] : true
+    conn.ssl.verify = options[:ssl_verification] != false
     @no_auth_required = options[:no_auth_required] || false
   end
 
@@ -111,9 +111,5 @@ class PlonquoFaradayWrapper
       user_hash[key] = value
     end
     user_hash
-  end
-
-  def boolean_specified?(val)
-    [true, false].include? val
   end
 end
