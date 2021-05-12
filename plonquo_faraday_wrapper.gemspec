@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'plonquo_faraday_wrapper'
-  s.version     = '1.2.5'
+  s.version     = '1.2.6'
   s.date        = '2019-07-19'
   s.summary     = 'PlonquoFaradayWrapper'
   s.description = 'PlonquoFaradayWrapper is a wrapper around the faraday gem for Fabriquartz Micro-Services'
@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    =
     'https://rubygems.org/gems/plonquo-request'
   s.license = 'MIT'
-  s.add_runtime_dependency 'faraday', '< 0.16'
+  s.add_runtime_dependency 'faraday', '~> 0.17.3'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec', '~> 3.7'
