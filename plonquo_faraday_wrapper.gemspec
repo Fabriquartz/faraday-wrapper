@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'faraday-wrapper'
-  s.required_ruby_version = '~> 2.7'
+  s.required_ruby_version = '>= 2.6'
   s.version     = '1.2.5'
   s.date        = '2019-07-19'
   s.summary     = 'PlonquoFaradayWrapper'
@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
   s.metadata["allowed_push_host"] = "https://rubygems.pkg.github.com/Fabriquartz"
 
-  s.add_runtime_dependency 'faraday', '< 0.16'
+  s.add_runtime_dependency 'faraday', '~> 2.3'
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec', '~> 3.7'
