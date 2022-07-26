@@ -1,0 +1,42 @@
+version: 2.1
+
+orbs:
+  ruby: circleci/ruby@1.8.0
+
+jobs:
+  test:
+    docker:
+      - image: cimg/ruby:2.7
+    steps:
+      - checkout
+      - ruby/install-deps
+      - ruby/rspec-test
+  deploy:
+    docker:
+      - image: cimg/ruby:2.7
+    steps:
+      - checkout
+      - ruby/install-deps
+      - run: 
+          name: Release package
+          command: |
+            mkdir ~/.gem
+            echo ":github: Bearer ${GH_TOKEN}" >> ~/.gem/credentials
+            chmod 0600 ~/.gem/credentials
+            bundle config set --global gem.push_key github
+            gem build
+            gem push --key github --host https://rubygems.pkg.github.com/Fabriquartz faraday-wrapper-${CIRCLE_TAG}.gem
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
+      - deploy:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/

@@ -3,13 +3,11 @@
 class PlonquoFaradayWrapper
   require 'faraday'
   require 'json'
-  attr_accessor :conn
-  attr_accessor :token
-  attr_accessor :user
-  attr_accessor :no_auth_required
+  attr_accessor :conn, :token, :user, :no_auth_required
 
   METHODS = %i[post get put patch delete].freeze
 
+  # rubocop:disable Metrics/BlockLength
   METHODS.each do |method|
     define_method(method) do |*args|
       check_auth
@@ -39,6 +37,7 @@ class PlonquoFaradayWrapper
       end
     end
   end
+  # rubocop:enable Metrics/BlockLength
 
   def initialize(url, options = {})
     @conn = Faraday.new(url: url)
@@ -72,13 +71,13 @@ class PlonquoFaradayWrapper
   private
 
   def check_options(method, options)
-    raise ArgumentError, 'Please define post or get in the method call' unless method == 'post' || method == 'get'
+    raise ArgumentError, 'Please define post or get in the method call' unless %w[post get].include?(method)
     raise ArgumentError, 'Please define a path in the options hash to call' if options[:path].nil? || options[:path].empty?
   end
 
   def check_auth(response = nil)
-    unless response.nil?
-      raise StandardError, 'Unauthorized, are you sure  your token or credentials are still valid?' if response.status == 401
+    if !response.nil? && (response.status == 401)
+      raise StandardError, 'Unauthorized, are you sure  your token or credentials are still valid?'
     end
     return if @no_auth_required
     raise StandardError, 'Not authenticated, use the authenticate method to login by token or credentials' if @token.nil? || @token.empty?
