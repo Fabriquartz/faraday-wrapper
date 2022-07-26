@@ -1,5 +1,6 @@
-require './lib/plonquo_faraday_wrapper.rb'
-describe PlonquoFaradayWrapper do
+# frozen_string_literal: true
+
+RSpec.describe PlonquoFaradayWrapper do
   describe '#ssl_verification' do
     let!(:wrapper)  { PlonquoFaradayWrapper.new('https://staging.calipri.plonquo.io', options) }
 
