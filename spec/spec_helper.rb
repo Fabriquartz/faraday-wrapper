@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'plonquo_faraday_wrapper'
+require 'faraday_wrapper'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
