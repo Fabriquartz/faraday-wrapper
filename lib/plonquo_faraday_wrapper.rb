@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PlonquoFaradayWrapper
+class FaradayWrapper
   require 'faraday'
   require 'json'
   attr_accessor :conn, :token, :user, :no_auth_required
